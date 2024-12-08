@@ -1,14 +1,33 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+## Thndr mobile task
 
-# Getting Started
+Task submission for Abdallah Ebrahim.
+The following application implements explore screen that lists nasdaq stocks, user can search stocks by name and it implements infinite scrolling for pagination.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## Table of Contents
 
-## Step 1: Start the Metro Server
+- [Overview](#thndr-mobile-task)
+- [Getting Started](#getting-start)
+- [Architecture](#architecture)
+- [Tech stack](#tach-stack)
+
+## 🚀 Getting Start
 
 First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
 
 To start Metro, run the following command from the _root_ of your React Native project:
+
+```bash
+npm install
+```
+
+for iOS you will need to install required pods
+
+```bash
+cd ios
+
+bundle exec
+bundle exec pod install
+```
 
 ```bash
 # using npm
@@ -18,62 +37,130 @@ npm start
 yarn start
 ```
 
-## Step 2: Start your Application
-
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
-
-### For Android
+Then you can run Android:
 
 ```bash
-# using npm
+# running android
 npm run android
 
-# OR using Yarn
-yarn android
+# OR
+yarn run android
 ```
 
-### For iOS
+for iOS:
 
 ```bash
-# using npm
+# running ios
 npm run ios
 
-# OR using Yarn
-yarn ios
+# OR
+yarn run ios
 ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+## 🏗️ Architecture
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+For a scalable and maintainable stock trading app like this, we need a clean architecture that separates concerns, supports scalability, and ensures testability.
 
-## Step 3: Modifying your App
+### 1. High level architecture
 
-Now that you have successfully run the app, let's modify it.
+```
+src/
+├── api/
+├── components/
+├── features/
+│   ├── explore/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── styles/
+│   │   ├── index.ts
+├── navigation/
+├── services/
+├── lib/
+├── state/
+├── utils/
+├── App.tsx
+```
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+### 2. Architecture layers
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+##### Data Layer
 
-## Congratulations! :tada:
+- Handles API calls and caching logic.
+- Use Axios for network requests.
+- Implement a caching layer with libraries like React Query or a custom solution using AsyncStorage.
 
-You've successfully run and modified your React Native App. :partying_face:
+Example:
 
-### Now what?
+```ts
+async function fetchTickers() {
+  try {
+    const response = await axios.get<PolygonResponse<Ticker>>('/tickers');
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return { results: [], status: '', request_id: '', count: 0, next_url: '' };
+  }
+}
+```
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+##### Domain Layer
 
-# Troubleshooting
+- Abstracts the business logic.
+- This is where you define reusable utility functions or custom hooks for fetching and manipulating stock data.
 
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+Example:
 
-# Learn More
+```ts
+import { useQuery } from 'react-query';
+import { fetchTickers } from '../api/tickers';
 
-To learn more about React Native, take a look at the following resources:
+export const useTickers = (search: string) => {
+  return useQuery([QueryKeys.Tickers, search], () => fetchTickers({ search }));
+};
+```
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+##### Presentation Layer
+
+- Consists of UI components, screens, and hooks.
+- Follow a container-component pattern:
+  - Containers handle state and logic.
+  - Components are pure and focus on rendering.
+
+Example:
+
+```tsx
+const ExploreScreen = () => {
+  const [search, setSearch] = useState('');
+  const { data } = useTickers(search);
+
+  return (
+    <Container>
+      <SearchInput search={search} onSearch={onSearch} />
+      <TickersList tickers={data} />
+    </Container>
+  );
+};
+```
+
+##### State management
+
+For the current requirements, there was no much need to a state management solution, as tanstack query handles server side state and caching for our listing apis.
+
+Later on we can manage the state using Zustand or Jotai for example, using the same architecture of feature-based stores.
+
+##### Testing
+
+In the current structure we support unit testing, we are using Jest, @testing-library/react-native as our testing setup
+
+- feature-based/multi-file components can have `__tests__` folder to include all unit tests.
+- single components/files should have `{name}-test.{ts|tsx}` close to the file.
+- if mock data is needed, it should be in `__fixtures__` folder.
+
+## ❇️ Tech Stack
+
+- #### React native
+
+  used react native cli to scaffold the application
+
+- #### TanStackQuery
+  TanStack query / react-query offers a simple and intiuative way to fetch data from server-side, used here to manage caching out of the box.
