@@ -5,9 +5,15 @@ The following application implements explore screen that lists nasdaq stocks, us
 
 ## Table of Contents
 
+- [Demo](#demo)
 - [Getting Started](#getting-start)
 - [Architecture](#architecture)
 - [Tech stack](#tach-stack)
+
+## Demo 
+
+![Screen Recording 2024-12-09 at 2 31 10 AM](https://github.com/user-attachments/assets/c84b95f1-deb1-4efc-9d5e-f843781a9c78)
+
 
 ## 🚀 Getting Start
 
