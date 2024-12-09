@@ -82,7 +82,7 @@ src/
 
 ### 2. Architecture layers
 
-##### Data Layer
+#### Data Layer
 
 - Handles API calls and caching logic.
 - Use Axios for network requests.
@@ -102,7 +102,7 @@ async function fetchTickers() {
 }
 ```
 
-##### Domain Layer
+#### Domain Layer
 
 - Abstracts the business logic.
 - This is where you define reusable utility functions or custom hooks for fetching and manipulating stock data.
@@ -118,7 +118,7 @@ export const useTickers = (search: string) => {
 };
 ```
 
-##### Presentation Layer
+#### Presentation Layer
 
 - Consists of UI components, screens, and hooks.
 - Follow a container-component pattern:
@@ -141,13 +141,13 @@ const ExploreScreen = () => {
 };
 ```
 
-##### State management
+#### State management
 
 For the current requirements, there was no much need to a state management solution, as tanstack query handles server side state and caching for our listing apis.
 
 Later on we can manage the state using Zustand or Jotai for example, using the same architecture of feature-based stores.
 
-##### Testing
+#### Testing
 
 In the current structure we support unit testing, we are using Jest, @testing-library/react-native as our testing setup
 
