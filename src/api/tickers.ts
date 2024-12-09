@@ -29,7 +29,7 @@ async function fetchTickers(
     const response = await axios.get<PolygonResponse<Ticker>>(
       `/tickers?search=${searchQuery}&cursor=${cursor}`,
     );
-    return response.data;
+    return response?.data;
   } catch (error) {
     console.error(error);
     return { results: [], status: '', request_id: '', count: 0, next_url: '' };

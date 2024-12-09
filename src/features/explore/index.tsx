@@ -7,6 +7,7 @@ import { isCloseToBottom } from './utils';
 import { SearchInput } from '@/components/search-input';
 import { CircularLoader, LoadingWrapper } from '@/components/loader';
 import { spacing, typography } from '@/lib';
+import EmptyState from '@/components/empty-state';
 
 function ExploreScreen() {
   const [search, setSearch] = useState('');
@@ -36,12 +37,16 @@ function ExploreScreen() {
             }
           }}>
           {data?.pages?.map(page =>
-            page.results.map(ticker => (
+            page?.results.map(ticker => (
               <Ticker key={ticker.name + ticker.ticker} ticker={ticker} />
             )),
           )}
 
           {isFetchingNextPage && <CircularLoader size="small" />}
+
+          {search.length > 0 && data?.pages[0]?.results.length === 0 && (
+            <EmptyState />
+          )}
         </ScrollView>
       </LoadingWrapper>
     </View>

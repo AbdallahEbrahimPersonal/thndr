@@ -5,7 +5,6 @@ The following application implements explore screen that lists nasdaq stocks, us
 
 ## Table of Contents
 
-- [Overview](#thndr-mobile-task)
 - [Getting Started](#getting-start)
 - [Architecture](#architecture)
 - [Tech stack](#tach-stack)
@@ -164,3 +163,8 @@ In the current structure we support unit testing, we are using Jest, @testing-li
 
 - #### TanStackQuery
   TanStack query / react-query offers a simple and intiuative way to fetch data from server-side, used here to manage caching out of the box.
+
+# Notes
+
+- Some folders includes only `.gitkeep` file, its placed there to keep the folder structure and project files traced on git.
+-
