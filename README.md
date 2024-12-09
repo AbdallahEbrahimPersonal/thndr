@@ -167,4 +167,3 @@ In the current structure we support unit testing, we are using Jest, @testing-li
 # Notes
 
 - Some folders includes only `.gitkeep` file, its placed there to keep the folder structure and project files traced on git.
--
